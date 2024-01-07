@@ -1,0 +1,29 @@
+<ShippingMethods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ShippingMethods.xsd">
+        <shipping_method_name>A1 shipping</shipping_method_name>
+        <shipping_cost>30</shipping_cost>
+        <order_id>1</order_id>
+        <orders>
+            <order id="1">
+                <order_date>2024-01-03T11:33:45</order_date>
+                <total_price>500</total_price>
+                <users>
+                    <user id="1">
+                        <username>Jaymee</username>
+                        <passw>abcd</passw>
+                        <email>jaymee@gmail.com</email>
+                    </user>
+                </users>
+            </order>
+            <order id="2">
+                <order_date>2024-01-02T06:23:54</order_date>
+                <total_price>1000</total_price>
+                <users>
+                    <user id="6">
+                        <username>Leon</username>
+                        <passw>abc</passw>
+                        <email>leon@gmail.com</email>
+                    </user>
+                </users>
+            </order>
+        </orders>
+</ShippingMethods>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:complexType name="UserType">
+        <xs:all>
+            <xs:element name="username" type="xs:string"/>
+            <xs:element name="passw" type="xs:string"/>
+            <xs:element name="email" type="xs:string"/>
+        </xs:all>
+        <xs:attribute name="id" type="xs:int" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="UsersType">
+        <xs:sequence>
+            <xs:element name="user" type="UserType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="CouponsType">
+        <xs:sequence>
+            <xs:element name="codes" type="xs:string"/>
+            <xs:element name="discount" type="xs:double"/>
+            <xs:element name="expiration_date" type="xs:date"/>
+            <xs:element name="user_id" type="xs:int"/>
+            <xs:element name="users" type="UsersType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="Coupons" type="CouponsType"/>
+</xs:schema>

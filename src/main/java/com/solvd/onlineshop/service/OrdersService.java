@@ -2,11 +2,9 @@ package com.solvd.onlineshop.service;
 
 import com.solvd.onlineshop.bin.Orders;
 import com.solvd.onlineshop.dao.OrdersRepositoryImpl;
-
+import org.apache.ibatis.session.SqlSessionFactory;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,10 +12,12 @@ import org.apache.logging.log4j.Logger;
 public class OrdersService {
 
     private static final Logger logger = LogManager.getLogger(OrdersService.class);
+    private final SqlSessionFactory sqlSessionFactory;
     private OrdersRepositoryImpl ordersRepository;
 
-    public OrdersService() {
-        this.ordersRepository = new OrdersRepositoryImpl();
+    public OrdersService(SqlSessionFactory sqlSessionFactory) {
+        this.sqlSessionFactory = sqlSessionFactory;
+        this.ordersRepository = new OrdersRepositoryImpl(sqlSessionFactory);
     }
 
     // Create a new order for a user

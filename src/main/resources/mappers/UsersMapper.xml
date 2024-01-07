@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.onlineshop.dao.persistence.UsersRepository">
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        Insert into users(username, passw, email) values (#{username}, #{passw}, #{email} )
+    </insert>
+
+<!--    <sql id="usersSelect">-->
+<!--        SELECT-->
+<!--        u.id AS users_id, u.username AS users_username,-->
+<!--        a.address_line1 AS address_address_line_1, a.address_line2 AS address_address_line_2,-->
+<!--        a.city AS address_city, a.state AS address_state, a.postal_code AS address_postal_code-->
+<!--        FROM users u-->
+<!--        LEFT JOIN addresses a ON a.user_id = u.id-->
+<!--    </sql>-->
+
+
+    <select id="findById" resultMap="UsersResultMap">
+        SELECT
+        id AS users_id, username AS users_username
+        FROM users
+        WHERE id = #{id}
+    </select>
+
+<!--    <select id="findByUsername">-->
+<!--        <include refid="usersSelect"/>-->
+<!--        where users.username = #{username}-->
+<!--    </select>-->
+
+    <update id="updateById">
+        update users set username = #{users.username}, passw = #{users.passw}, email = #{users.email} where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        Delete from users where id = #{id}
+    </delete>
+    
+    <resultMap id="UsersResultMap" type="com.solvd.onlineshop.bin.Users" autoMapping="false">
+        <id column="users_id" property="id" />
+        <result column="users_username" property="username"/>
+        <result column="address_address_line_1" property="address_line_1"/>
+    </resultMap>
+</mapper>

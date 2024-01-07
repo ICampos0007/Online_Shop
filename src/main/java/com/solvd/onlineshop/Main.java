@@ -1,19 +1,33 @@
 package com.solvd.onlineshop;
 
-import com.solvd.onlineshop.bin.Addresses;
-import com.solvd.onlineshop.bin.Products;
-import com.solvd.onlineshop.bin.Users;
-import com.solvd.onlineshop.dao.AddressesRepositoryImpl;
-import com.solvd.onlineshop.dao.UsersRepositoryImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.solvd.onlineshop.bin.*;
+import com.solvd.onlineshop.dao.PaymentMethodsRepositoryMyBatisImpl;
+import com.solvd.onlineshop.dao.ProductsRepositoryMyBatisImpl;
+import com.solvd.onlineshop.dao.UsersRepositoryMyBatisImpl;
+import com.solvd.onlineshop.dao.persistence.PaymentMethodsRepository;
+import com.solvd.onlineshop.dao.persistence.ProductsRepository;
+import com.solvd.onlineshop.dao.persistence.UsersRepository;
 import com.solvd.onlineshop.service.*;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,18 +37,17 @@ public class Main {
         Logger logger = LogManager.getLogger(Main.class);
         logger.info("Hello world!");
 
-        try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306", "root", "root");
-            Statement statement = connection.createStatement();
-            statement.execute("use online_shop");
-            ResultSet resultSet = statement.executeQuery("select * from users");
+        try (InputStream is = Resources.getResourceAsStream("mybatis-config.xml")) {
 
-            while (resultSet.next()) {
-                logger.info(resultSet.getString("username"));
-            }
+            // Initialize SqlSessionFactory
+            SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(is);
 
             // Create an instance of UsersService
-            UsersService usersService = new UsersService();
+            UsersService usersService = new UsersService(sqlSessionFactory);
+
+
+
+
 
             // Check if the username already exists
             String usernameToCheck = "john_doe";
@@ -55,7 +68,9 @@ public class Main {
                 logger.info("Username already exists: " + newUser.getUsername());
             }
 
-            ProductsService productsService = new ProductsService();
+            // Initialize SqlSessionFactory
+
+            ProductsService productsService = new ProductsService(sqlSessionFactory);
 
             // Example: Create a new product
             Products newProduct = new Products(3, "HP Laptop", "HP Laptop with 16 gigs of ram", 2000);
@@ -80,7 +95,7 @@ public class Main {
                 logger.info("Product with name '" + productNameToCheck + "' does not exist.");
             }
 
-            AddressesService addressesService = new AddressesService();
+            AddressesService addressesService = new AddressesService(sqlSessionFactory);
 
 // Example: Create a new address
             Addresses newAddress = new Addresses(3, "1600 Pennsylvania Avenue NW", null, "Washington D.C", "Washington D.C", 37188, 8);
@@ -161,13 +176,13 @@ public class Main {
             // Check if the user already has a coupon
             couponsService.createCoupon(couponId, couponCode, discountPercentage, expirationDate, userId);
 
-            int orderId = 4;
+            int orderId = 25;
             int orderUserId = 1;
             double totalPrice = 2000.0;
             Date orderDate = new Date();  // You should set the actual order date here
 
             // Create an instance of OrdersService
-            OrdersService ordersService = new OrdersService();
+            OrdersService ordersService = new OrdersService(sqlSessionFactory);
 
             try {
                 // Create a new order
@@ -176,20 +191,7 @@ public class Main {
                 e.printStackTrace();
             }
 
-            OrderDetailsService orderDetailsService = new OrderDetailsService();
-
-            // Example: Create a new order detail
-            int orderDetailId = 2;
-            int orderOrdersId = 1; // Assuming this order ID exists
-            int productId = 2; // Replace with a valid product ID
-            int quantity = 1;
-            double subtotal = 700;
-
-            // Create the order detail
-            orderDetailsService.createOrderDetail(orderDetailId, orderOrdersId, productId, quantity, subtotal);
-
-
-            PaymentMethodsService paymentMethodsService = new PaymentMethodsService();
+            PaymentMethodsService paymentMethodsService = new PaymentMethodsService(sqlSessionFactory);
 
             // Example: Create a new payment method
             int paymentMethodId = 2;
@@ -237,8 +239,77 @@ public class Main {
             // Create a new shipping method
             shippingMethodsService.createShippingMethod(shippingMethodId, shippingMethodName, shippingCost, shippingOrderId);
 
+            UsersRepository usersRepository = new UsersRepositoryMyBatisImpl(sqlSessionFactory);
+            UsersMyBatisService usersMyBatisService = new UsersMyBatisService(usersRepository);
+//
+//            // Create a new user using mybatis
+//            Users newMyBatisUser = new Users(50,"Nora","norapass", "nora@gmail.com");
+//            usersMyBatisService.createUser(newMyBatisUser);
 
-        } catch (SQLException e) {
+            ProductsRepository productsRepository = new ProductsRepositoryMyBatisImpl(sqlSessionFactory);
+            ProductsMyBatisService productsMyBatisService = new ProductsMyBatisService(productsRepository);
+            // Create a new Products using mybatis
+//            Products newMyBatisProduct = new Products(1,"Ipad Pro","Ipad for fun", 1000);
+//            productsMyBatisService.createProduct(newMyBatisProduct);
+
+            PaymentMethodsRepository paymentMethodsRepository = new PaymentMethodsRepositoryMyBatisImpl(sqlSessionFactory);
+            PaymentMethodsMyBatisService paymentMethodsMyBatisService = new PaymentMethodsMyBatisService(paymentMethodsRepository);
+
+            // Create a new Payment method using mybatis
+            PaymentMethods newMyBatisPaymentMethod = new PaymentMethods(5,22,"777888999",4444,444);
+//            paymentMethodsMyBatisService.createPaymentMethod(newMyBatisPaymentMethod);
+
+            // DOM for ShippingMethod.xml file
+            File file = new File("src/main/resources/ShippingMethods.xml");
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            try {
+                DocumentBuilder builder = factory.newDocumentBuilder();
+                Document document = builder.parse(file);
+                // Retrieve shipping method data
+                NodeList shippingMethodNodes = document.getElementsByTagName("ShippingMethods");
+                for (int i = 0; i < shippingMethodNodes.getLength(); i++) {
+                    Element shippingMethodElement = (Element) shippingMethodNodes.item(i);
+
+                    String domShippingMethodName = shippingMethodElement.getElementsByTagName("shipping_method_name")
+                            .item(0)
+                            .getTextContent();
+
+                    double domShippingCost = Double.parseDouble(shippingMethodElement.getElementsByTagName("shipping_cost")
+                            .item(0)
+                            .getTextContent());
+
+                    int domOrderId = Integer.parseInt(shippingMethodElement.getElementsByTagName("order_id")
+                            .item(0)
+                            .getTextContent());
+
+                    ShippingMethods shippingMethod = new ShippingMethods(0, "space shipping", 50, 1);
+
+                }
+
+            } catch (ParserConfigurationException | SAXException e) {
+                throw  new RuntimeException();
+            }
+            File file2 = new File("src/main/resources/Coupons.xml");
+            JAXBContext jaxbContext = JAXBContext.newInstance(Coupons.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            Coupons coupons = (Coupons) unmarshaller.unmarshal(file2);
+
+            // Display the retrieved data
+            logger.info("Codes: " + coupons.getCodes());
+            logger.info("Discount: " + coupons.getDiscount());
+
+
+            File file3 = new File("src/main/resources/Users.json");
+            ObjectMapper mapper = new ObjectMapper();
+            Users users = mapper.readValue(file3,Users.class);
+
+            // Display the retrieved data
+            logger.info("User ID: " + users.getId());
+            logger.info("Username: " + users.getUsername());
+            logger.info("Password: " + users.getPassword());
+            logger.info("Email: " + users.getEmail());
+
+        } catch (SQLException | IOException | JAXBException e) {
             e.printStackTrace();
         }
     }

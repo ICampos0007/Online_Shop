@@ -1,8 +1,15 @@
 package com.solvd.onlineshop.bin;
 
-import java.util.Date;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
+import java.util.Date;
+@XmlRootElement(name = "Coupons")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Coupons {
+    @XmlAttribute(name = "id")
     private  int id;
     private String codes;
 
@@ -11,6 +18,8 @@ public class Coupons {
     private Date expiration_Date;
 
     private  int user_Id;
+    public Coupons() {
+    }
 
     public Coupons(int id, String codes, double discount, Date expiration_Date, int user_Id) {
         this.id = id;

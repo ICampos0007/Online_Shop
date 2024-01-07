@@ -2,6 +2,7 @@ package com.solvd.onlineshop.service;
 
 import com.solvd.onlineshop.bin.PaymentMethods;
 import com.solvd.onlineshop.dao.PaymentMethodsRepositoryImpl;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,8 +13,8 @@ public class PaymentMethodsService {
     private static final Logger logger = LogManager.getLogger(PaymentMethodsService.class);
     private PaymentMethodsRepositoryImpl paymentMethodsRepository;
 
-    public PaymentMethodsService() {
-        this.paymentMethodsRepository = new PaymentMethodsRepositoryImpl();
+    public PaymentMethodsService(SqlSessionFactory sqlSessionFactory) {
+        this.paymentMethodsRepository = new PaymentMethodsRepositoryImpl(sqlSessionFactory);
     }
 
     // Create a new payment method for a user

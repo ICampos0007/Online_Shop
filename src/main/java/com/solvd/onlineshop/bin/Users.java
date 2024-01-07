@@ -1,5 +1,8 @@
 package com.solvd.onlineshop.bin;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Users {
     private int id;
     private String username;
@@ -8,12 +11,15 @@ public class Users {
 
     private String email;
 
-    public Users(int id, String username, String passw, String email) {
+    @JsonCreator
+    public Users(@JsonProperty("id") int id,
+                 @JsonProperty("username") String username,
+                 @JsonProperty("passw") String passw,
+                 @JsonProperty("email") String email) {
         this.id = id;
         this.username = username;
         this.passw = passw;
         this.email = email;
-
     }
 
     public void setId(int id) {

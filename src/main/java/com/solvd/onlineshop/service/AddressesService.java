@@ -2,17 +2,19 @@ package com.solvd.onlineshop.service;
 
 import com.solvd.onlineshop.bin.Addresses;
 import com.solvd.onlineshop.dao.AddressesRepositoryImpl;
-
+import org.apache.ibatis.session.SqlSessionFactory;
 import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class AddressesService {
     private static final Logger logger = LogManager.getLogger(AddressesService.class);
+    private final SqlSessionFactory sqlSessionFactory;
     private AddressesRepositoryImpl addressesRepository;
 
-    public AddressesService() {
-        this.addressesRepository = new AddressesRepositoryImpl();
+    public AddressesService(SqlSessionFactory sqlSessionFactory) {
+        this.sqlSessionFactory = sqlSessionFactory;
+        this.addressesRepository = new AddressesRepositoryImpl(sqlSessionFactory);
     }
 
     // Create a new address

@@ -4,6 +4,8 @@ import com.solvd.onlineshop.bin.Products;
 import com.solvd.onlineshop.dao.ProductsRepositoryImpl;
 
 import java.sql.SQLException;
+
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,8 +13,8 @@ public class ProductsService {
     private static final Logger logger = LogManager.getLogger(ProductsService.class);
     private ProductsRepositoryImpl productsRepositoryImpl;
 
-    public ProductsService() {
-        this.productsRepositoryImpl = new ProductsRepositoryImpl();
+    public ProductsService(SqlSessionFactory sqlSessionFactory) {
+        this.productsRepositoryImpl = new ProductsRepositoryImpl(sqlSessionFactory);
     }
 
     public void createProduct(Products product) {

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.onlineshop.dao.persistence.ProductsRepository">
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        Insert into products(name, description, price)
+        values (#{name}, #{description}, #{price})
+    </insert>
+
+    <select id="findByName" resultMap="ProductsResultMap">
+        Select * from products where name = #{name}
+    </select>
+
+    <select id="findById" resultMap="ProductsResultMap">
+        Select * from products where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        Delete from products where id = #{id}
+    </delete>
+
+    <resultMap id="ProductsResultMap" type="com.solvd.onlineshop.bin.Products" autoMapping="false">
+        <id column="id" property="id" />
+        <result column="name" property="name"/>
+        <result column="description" property="description"/>
+        <result column="price" property="price"/>
+    </resultMap>
+</mapper>

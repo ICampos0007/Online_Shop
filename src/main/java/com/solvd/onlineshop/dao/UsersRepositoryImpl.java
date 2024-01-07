@@ -1,17 +1,24 @@
 package com.solvd.onlineshop.dao;
 
 import com.solvd.onlineshop.bin.Users;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.sql.*;
 
-public class UsersRepositoryImpl {
+public class UsersRepositoryImpl  {
 
     private static final Logger logger = LogManager.getLogger(UsersRepositoryImpl.class);
+
+    private final SqlSessionFactory sqlSessionFactory;
+
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/online_shop";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
+
+    public UsersRepositoryImpl(SqlSessionFactory sqlSessionFactory) {
+        this.sqlSessionFactory = sqlSessionFactory;
+    }
 
     // Create a new user
     public void createUser(Users user) {

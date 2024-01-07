@@ -1,9 +1,11 @@
 package com.solvd.onlineshop.dao;
 
 import com.solvd.onlineshop.bin.Orders;
+import com.solvd.onlineshop.dao.persistence.OrdersRepository;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+import org.apache.ibatis.session.SqlSessionFactory;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,6 +19,12 @@ public class OrdersRepositoryImpl {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/online_shop";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
+
+    private final SqlSessionFactory sqlSessionFactory;
+
+    public OrdersRepositoryImpl(SqlSessionFactory sqlSessionFactory) {
+        this.sqlSessionFactory = sqlSessionFactory;
+    }
 
     // Insert a new order
     public void addOrder(Orders order) {

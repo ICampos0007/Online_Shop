@@ -1,0 +1,13 @@
+<Coupons xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Coupons.xsd">
+    <codes>super coupon</codes>
+    <discount>15</discount>
+    <expiration_date>2024-01-01</expiration_date>
+    <user_id>1</user_id>
+    <users>
+        <user id="1">
+            <username>Jaymee</username>
+            <passw>abcd</passw>
+            <email>jaymee@gmail.com</email>
+        </user>
+    </users>
+</Coupons>

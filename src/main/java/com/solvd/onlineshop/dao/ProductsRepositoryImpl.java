@@ -1,21 +1,28 @@
 package com.solvd.onlineshop.dao;
 
 import com.solvd.onlineshop.bin.Products;
+import com.solvd.onlineshop.dao.persistence.ProductsRepository;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ProductsRepositoryImpl {
+public class ProductsRepositoryImpl  {
 
     private static final Logger logger = LogManager.getLogger(ProductsRepositoryImpl.class);
+    private final SqlSessionFactory sqlSessionFactory;
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/online_shop";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
+
+    public ProductsRepositoryImpl(SqlSessionFactory sqlSessionFactory) {
+        this.sqlSessionFactory = sqlSessionFactory;
+    }
 
     // Insert a new product
     public void createProduct(Products product) {
