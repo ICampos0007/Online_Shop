@@ -11,15 +11,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ShippingMethodsRepositoryImpl {
+    Connection connection = ConnectionPool.getConnection();
 
     private static final Logger logger = LogManager.getLogger(ShippingMethodsRepositoryImpl.class);
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/online_shop";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "root";
 
     // Insert a new shipping method
     public void addShippingMethod(ShippingMethods shippingMethod) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "INSERT INTO shippingmethods (id, shipping_method_name, shipping_cost, order_id) " +
                     "VALUES (?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -32,13 +30,17 @@ public class ShippingMethodsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error creating shipping method: " + shippingMethod.getId(), e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     // Retrieve a shipping method by ID
     public ShippingMethods getShippingMethodById(int shippingMethodId) {
         ShippingMethods shippingMethod = null;
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM shippingmethods WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, shippingMethodId);
@@ -55,13 +57,17 @@ public class ShippingMethodsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving shipping method: " + shippingMethodId, e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return shippingMethod;
     }
 
     // Update shipping method information
     public void updateShippingMethod(ShippingMethods shippingMethod) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "UPDATE shippingmethods SET shipping_method_name = ?, shipping_cost = ?, order_id = ? " +
                     "WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -74,13 +80,17 @@ public class ShippingMethodsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error updating shipping method: " + shippingMethod.getId(), e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     // Retrieve a shipping method by order ID
     public ShippingMethods getShippingMethodByOrderId(int orderId) {
         ShippingMethods shippingMethod = null;
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM shippingmethods WHERE order_id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, orderId);
@@ -97,6 +107,10 @@ public class ShippingMethodsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving shipping method by order ID: " + orderId, e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return shippingMethod;
     }

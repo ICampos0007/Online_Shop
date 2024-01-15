@@ -12,14 +12,12 @@ import java.sql.SQLException;
 
 public class CartItemsRepositoryImpl {
 
-    private static final Logger logger = LogManager.getLogger(CartItemsRepositoryImpl.class);
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/online_shop";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "root";
+    Connection connection = ConnectionPool.getConnection();
 
+    private static final Logger logger = LogManager.getLogger(CartItemsRepositoryImpl.class);
     // Insert a new cart item
-    public void addCartItem(CartItems cartItem) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+    public void addCartItem(CartItems cartItem){
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "INSERT INTO cartitems (id, cart_id, product_id, quantity) VALUES (?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, cartItem.getId());
@@ -31,13 +29,17 @@ public class CartItemsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error creating cart item: " + cartItem.getId(), e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     // Retrieve a cart item by ID
     public CartItems getCartItemById(int cartItemId) {
         CartItems cartItem = null;
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM cartitems WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, cartItemId);
@@ -54,13 +56,18 @@ public class CartItemsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving cart item: " + cartItemId, e);
+
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return cartItem;
     }
 
     // Update cart item information
     public void updateCartItem(CartItems cartItem) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "UPDATE cartitems SET cart_id = ?, product_id = ?, quantity = ? WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, cartItem.getCart_Id());
@@ -72,12 +79,17 @@ public class CartItemsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error updating cart item: " + cartItem.getId(), e);
+
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     public CartItems getCartItemByCartId(int cartId) {
         CartItems cartItem = null;
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM cartitems WHERE cart_id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, cartId);
@@ -94,6 +106,11 @@ public class CartItemsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving cart item by cart ID: " + cartId, e);
+
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return cartItem;
     }

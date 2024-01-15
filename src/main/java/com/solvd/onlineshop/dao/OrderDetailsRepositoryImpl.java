@@ -11,15 +11,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class OrderDetailsRepositoryImpl {
+    Connection connection = ConnectionPool.getConnection();
 
     private static final Logger logger = LogManager.getLogger(OrderDetailsRepositoryImpl.class);
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/online_shop";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "root";
 
     // Insert a new order detail
     public void addOrderDetail(OrderDetails orderDetail) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "INSERT INTO orderdetails (id, order_id, product_id, quantity, subtotal) " +
                     "VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -33,13 +31,17 @@ public class OrderDetailsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error creating order detail: " + orderDetail.getId(), e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     // Retrieve an order detail by ID
     public OrderDetails getOrderDetailById(int orderDetailId) {
         OrderDetails orderDetail = null;
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM orderdetails WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, orderDetailId);
@@ -57,13 +59,17 @@ public class OrderDetailsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving order detail: " + orderDetailId, e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return orderDetail;
     }
 
     // Update order detail information
     public void updateOrderDetail(OrderDetails orderDetail) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "UPDATE orderdetails SET order_id = ?, product_id = ?, quantity = ?, subtotal = ? WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, orderDetail.getOrder_Id());
@@ -76,13 +82,17 @@ public class OrderDetailsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error updating order detail: " + orderDetail.getId(), e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     // Retrieve an order detail by order ID
     public OrderDetails getOrderDetailByOrderId(int orderId) {
         OrderDetails orderDetail = null;
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM orderdetails WHERE order_id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, orderId);
@@ -100,6 +110,10 @@ public class OrderDetailsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving order detail by order ID: " + orderId, e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return orderDetail;
     }

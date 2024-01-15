@@ -13,20 +13,14 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 public class PromotionsRepositoryImpl {
+    Connection connection = ConnectionPool.getConnection();
 
     private static final Logger logger = LogManager.getLogger(PromotionsRepositoryImpl.class);
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/online_shop";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "root";
 
-    // Obtain a database connection
-    private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
-    }
 
     // Insert a new promotion
     public void addPromotion(Promotions promotion) {
-        try (Connection connection = getConnection()) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "INSERT INTO seasonal_promotions (id, promotion_name, start_date, end_date, product_id) " +
                     "VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -40,13 +34,17 @@ public class PromotionsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error creating promotion: " + promotion.getId(), e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     // Retrieve a promotion by ID
     public Promotions getPromotionById(int promotionId) {
         Promotions promotion = null;
-        try (Connection connection = getConnection()) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM seasonal_promotions WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, promotionId);
@@ -64,13 +62,17 @@ public class PromotionsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving promotion: " + promotionId, e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return promotion;
     }
 
     // Update promotion information
     public void updatePromotion(Promotions promotion) {
-        try (Connection connection = getConnection()) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "UPDATE seasonal_promotions SET promotion_name = ?, start_date = ?, end_date = ?, product_id = ? " +
                     "WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -84,12 +86,16 @@ public class PromotionsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error updating promotion: " + promotion.getId(), e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     public Promotions getPromotionByName(String promotionName) {
         Promotions promotion = null;
-        try (Connection connection = getConnection()) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM seasonal_promotions WHERE promotion_name = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, promotionName);
@@ -107,13 +113,17 @@ public class PromotionsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving promotion by name: " + promotionName, e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return promotion;
     }
 
     public Promotions getPromotionByProductId(int productId) {
         Promotions promotion = null;
-        try (Connection connection = getConnection()) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM seasonal_promotions WHERE product_id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, productId);
@@ -131,6 +141,10 @@ public class PromotionsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving promotion by product ID: " + productId, e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return promotion;
     }

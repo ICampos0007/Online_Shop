@@ -1,23 +1,20 @@
 package com.solvd.onlineshop.dao;
 
 import com.solvd.onlineshop.bin.Addresses;
-import com.solvd.onlineshop.dao.persistence.AddressesRepository;
-import org.apache.ibatis.session.SqlSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.ibatis.session.SqlSessionFactory;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AddressesRepositoryImpl {
 
+    Connection connection = ConnectionPool.getConnection();
+
+
     private static final Logger logger = LogManager.getLogger(AddressesRepositoryImpl.class);
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/online_shop";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "root";
 
     private final SqlSessionFactory sqlSessionFactory;
 
@@ -27,7 +24,7 @@ public class AddressesRepositoryImpl {
 
     // Insert a new address
     public void addAddress(Addresses address) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "INSERT INTO addresses (id, address_line_1, address_line_2, city, state, postal_code, user_id) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -43,13 +40,18 @@ public class AddressesRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error creating address: " + address.getId(), e);
+
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     // Retrieve an address by ID
     public Addresses getAddressById(int addressId) {
         Addresses address = null;
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM addresses WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, addressId);
@@ -69,13 +71,18 @@ public class AddressesRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving address: " + addressId, e);
+
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return address;
     }
 
     // Update address information
     public void updateAddress(Addresses address) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "UPDATE addresses SET address_line_1 = ?, address_line_2 = ?, city = ?, state = ?, " +
                     "postal_code = ?, user_id = ? WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -91,13 +98,18 @@ public class AddressesRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error updating address: " + address.getId(), e);
+
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     // Retrieve an address by user ID
     public Addresses getAddressByUserId(int addressId) {
         Addresses address = null;
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM addresses WHERE user_id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, addressId);
@@ -117,6 +129,11 @@ public class AddressesRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving address: " + addressId, e);
+
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return address;
     }

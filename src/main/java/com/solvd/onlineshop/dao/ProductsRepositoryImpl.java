@@ -13,20 +13,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ProductsRepositoryImpl  {
+    Connection connection = ConnectionPool.getConnection();
 
     private static final Logger logger = LogManager.getLogger(ProductsRepositoryImpl.class);
     private final SqlSessionFactory sqlSessionFactory;
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/online_shop";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "root";
-
     public ProductsRepositoryImpl(SqlSessionFactory sqlSessionFactory) {
         this.sqlSessionFactory = sqlSessionFactory;
     }
 
     // Insert a new product
     public void createProduct(Products product) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "INSERT INTO products (id, name, description, price) VALUES (?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, product.getId());
@@ -38,13 +35,17 @@ public class ProductsRepositoryImpl  {
             }
         } catch (SQLException e) {
             logger.error("Error creating product: " + product.getId(), e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     // Retrieve a product by ID
     public Products getProductById(int productId) {
         Products product = null;
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM products WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, productId);
@@ -61,13 +62,17 @@ public class ProductsRepositoryImpl  {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving product: " + productId, e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return product;
     }
 
     // Update product information
     public void updateProduct(Products product) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "UPDATE products SET name = ?, description = ?, price = ? WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, product.getName());
@@ -79,13 +84,17 @@ public class ProductsRepositoryImpl  {
             }
         } catch (SQLException e) {
             logger.error("Error updating product: " + product.getId(), e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     // Retrieve a product by name
     public Products getProductByName(String productName) {
         Products product = null;
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM products WHERE name = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, productName);
@@ -102,6 +111,10 @@ public class ProductsRepositoryImpl  {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving product by name: " + productName, e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return product;
     }

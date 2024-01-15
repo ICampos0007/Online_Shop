@@ -270,18 +270,6 @@ public class Main {
                 for (int i = 0; i < shippingMethodNodes.getLength(); i++) {
                     Element shippingMethodElement = (Element) shippingMethodNodes.item(i);
 
-                    String domShippingMethodName = shippingMethodElement.getElementsByTagName("shipping_method_name")
-                            .item(0)
-                            .getTextContent();
-
-                    double domShippingCost = Double.parseDouble(shippingMethodElement.getElementsByTagName("shipping_cost")
-                            .item(0)
-                            .getTextContent());
-
-                    int domOrderId = Integer.parseInt(shippingMethodElement.getElementsByTagName("order_id")
-                            .item(0)
-                            .getTextContent());
-
                     ShippingMethods shippingMethod = new ShippingMethods(0, "space shipping", 50, 1);
 
                 }

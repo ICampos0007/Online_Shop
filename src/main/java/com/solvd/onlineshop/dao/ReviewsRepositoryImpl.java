@@ -12,15 +12,14 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
 public class ReviewsRepositoryImpl {
+    Connection connection = ConnectionPool.getConnection();
 
     private static final Logger logger = LogManager.getLogger(ReviewsRepositoryImpl.class);
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/online_shop";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "root";
+
 
     // Insert a new review
     public void addReview(Reviews review) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "INSERT INTO reviews (id, user_id, product_id, rating, comment, review_date) " +
                     "VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -35,13 +34,17 @@ public class ReviewsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error creating review: " + review.getId(), e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     // Retrieve a review by ID
     public Reviews getReviewById(int reviewId) {
         Reviews review = null;
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM reviews WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, reviewId);
@@ -60,13 +63,17 @@ public class ReviewsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving review: " + reviewId, e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return review;
     }
 
     // Update review information
     public void updateReview(Reviews review) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "UPDATE reviews SET user_id = ?, product_id = ?, rating = ?, " +
                     "comment = ?, review_date = ? WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -81,13 +88,17 @@ public class ReviewsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error updating review: " + review.getId(), e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     // Retrieve a review by User ID
     public Reviews getReviewByUserIdAndProductId(int userId, int productId) {
         Reviews review = null;
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM reviews WHERE user_id = ? AND product_id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, userId);
@@ -107,6 +118,10 @@ public class ReviewsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving review by user ID and product ID: " + userId + ", " + productId, e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return review;
     }

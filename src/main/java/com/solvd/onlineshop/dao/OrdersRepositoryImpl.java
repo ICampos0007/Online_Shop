@@ -14,11 +14,10 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
 public class OrdersRepositoryImpl {
+    Connection connection = ConnectionPool.getConnection();
 
     private static final Logger logger = LogManager.getLogger(OrdersRepositoryImpl.class);
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/online_shop";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "root";
+
 
     private final SqlSessionFactory sqlSessionFactory;
 
@@ -28,7 +27,7 @@ public class OrdersRepositoryImpl {
 
     // Insert a new order
     public void addOrder(Orders order) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "INSERT INTO orders (id, user_id, order_date, total_price) VALUES (?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, order.getId());
@@ -40,13 +39,17 @@ public class OrdersRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error creating order: " + order.getId(), e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     // Retrieve an order by ID
     public Orders getOrderById(int orderId) {
         Orders order = null;
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM orders WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, orderId);
@@ -63,13 +66,17 @@ public class OrdersRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving order: " + orderId, e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return order;
     }
 
     // Update order information
     public void updateOrder(Orders order) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "UPDATE orders SET user_id = ?, order_date = ?, total_price = ? WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, order.getUser_id());
@@ -81,13 +88,17 @@ public class OrdersRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error updating order: " + order.getId(), e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     // Retrieve an order by User ID
     public Orders getOrderByUserId(int userId) {
         Orders order = null;
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM orders WHERE user_id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, userId);
@@ -104,6 +115,10 @@ public class OrdersRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving order by user ID: " + userId, e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return order;
     }

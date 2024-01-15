@@ -3,7 +3,6 @@ package com.solvd.onlineshop.dao;
 import com.solvd.onlineshop.bin.Coupons;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,15 +11,13 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
 public class CouponsRepositoryImpl {
+    Connection connection = ConnectionPool.getConnection();
 
     private static final Logger logger = LogManager.getLogger(CouponsRepositoryImpl.class);
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/online_shop";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "root";
 
     // Insert a new coupon
     public void addCoupon(Coupons coupon) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "INSERT INTO coupons (id, codes, discount, expiration_date, user_id) " +
                     "VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -34,13 +31,17 @@ public class CouponsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error creating coupon: " + coupon.getId(), e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     // Retrieve a coupon by ID
     public Coupons getCouponById(int couponId) {
         Coupons coupon = null;
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM coupons WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, couponId);
@@ -58,13 +59,17 @@ public class CouponsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving coupon: " + couponId, e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return coupon;
     }
 
     // Update coupon information
     public void updateCoupon(Coupons coupon) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "UPDATE coupons SET codes = ?, discount_percentage = ?, " +
                     "expiration_date = ?, user_id = ? WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -78,12 +83,16 @@ public class CouponsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error updating coupon: " + coupon.getId(), e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
     }
 
     public Coupons getCouponByUserId(int userId) {
         Coupons coupon = null;
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionPool.getConnection()) {
             String query = "SELECT * FROM coupons WHERE user_id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, userId);
@@ -101,6 +110,10 @@ public class CouponsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving coupon by user ID: " + userId, e);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.releaseConnection(connection);
+            }
         }
         return coupon;
     }

@@ -28,9 +28,7 @@
 
     <xs:complexType name="OrdersType">
         <xs:sequence>
-            <xs:element name="order" type="OrderType" minOccurs="0" maxOccurs="unbounded">
-
-            </xs:element>
+            <xs:element name="order" type="OrderType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
