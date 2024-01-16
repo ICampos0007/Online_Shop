@@ -1,4 +1,5 @@
-package com.solvd.onlineshop.dao;
+package com.solvd.onlineshop.dao.mybatisimpl;
+import com.solvd.onlineshop.dao.DaoConfig;
 import org.apache.ibatis.session.SqlSessionFactory;
 import com.solvd.onlineshop.bin.PaymentMethods;
 import com.solvd.onlineshop.dao.persistence.PaymentMethodsRepository;

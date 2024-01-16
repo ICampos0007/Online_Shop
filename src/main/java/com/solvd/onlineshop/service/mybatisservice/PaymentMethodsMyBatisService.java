@@ -1,4 +1,4 @@
-package com.solvd.onlineshop.service;
+package com.solvd.onlineshop.service.mybatisservice;
 
 import com.solvd.onlineshop.bin.PaymentMethods;
 import com.solvd.onlineshop.dao.DaoConfig;

@@ -1,7 +1,7 @@
 package com.solvd.onlineshop.service;
 
 import com.solvd.onlineshop.bin.ShippingMethods;
-import com.solvd.onlineshop.dao.ShippingMethodsRepositoryImpl;
+import com.solvd.onlineshop.dao.mybatisimpl.ShippingMethodsRepositoryImpl;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,6 +1,7 @@
-package com.solvd.onlineshop.dao;
+package com.solvd.onlineshop.dao.mybatisimpl;
 
 import com.solvd.onlineshop.bin.Products;
+import com.solvd.onlineshop.dao.DaoConfig;
 import com.solvd.onlineshop.dao.persistence.ProductsRepository;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
