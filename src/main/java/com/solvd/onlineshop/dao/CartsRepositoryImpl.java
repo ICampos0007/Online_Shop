@@ -85,7 +85,9 @@ public class CartsRepositoryImpl {
     // Retrieve a cart by User ID
     public Carts getCartByUserId(int userId) {
         Carts cart = null;
-        try (Connection connection = ConnectionPool.getConnection()) {
+        Connection connection = null;
+        try {
+            connection = ConnectionPool.getConnection();
             String query = "SELECT * FROM carts WHERE user_id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, userId);
@@ -100,7 +102,6 @@ public class CartsRepositoryImpl {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving cart by user ID: " + userId, e);
-
         } finally {
             if (connection != null) {
                 ConnectionPool.releaseConnection(connection);
