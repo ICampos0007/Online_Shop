@@ -1,44 +1,15 @@
 package com.solvd.onlineshop.service;
 
 import com.solvd.onlineshop.bin.Addresses;
-import com.solvd.onlineshop.dao.AddressesRepositoryImpl;
-import org.apache.ibatis.session.SqlSessionFactory;
-import java.sql.SQLException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.solvd.onlineshop.bin.Users;
 
-public class AddressesService {
-    private static final Logger logger = LogManager.getLogger(AddressesService.class);
-    private final SqlSessionFactory sqlSessionFactory;
-    private AddressesRepositoryImpl addressesRepository;
+public interface AddressesService{
 
-    public AddressesService(SqlSessionFactory sqlSessionFactory) {
-        this.sqlSessionFactory = sqlSessionFactory;
-        this.addressesRepository = new AddressesRepositoryImpl(sqlSessionFactory);
-    }
+    int create(Addresses addresses, Users usersId);
 
-    // Create a new address
-    public void createAddress(Addresses address) {
-        addressesRepository.addAddress(address);
-        logger.info("Address created successfully: " + address.getId());
-    }
+    Addresses getById(int id);
 
-    // Check if a user already has an address
-    public boolean isUserHasAddress(int userId) throws SQLException {
-        Addresses existingAddress = addressesRepository.getAddressByUserId(userId);
-        return existingAddress != null;
-    }
+    void  update(Addresses addresses);
 
-    // Example: Create a new address for a user if they don't have one
-    public void createAddressForUserIfNotExists(Addresses address) {
-        try {
-            if (!isUserHasAddress(address.getUser_id())) {
-                createAddress(address);
-            } else {
-                logger.info("User with ID " + address.getUser_id() + " already has an address.");
-            }
-        } catch (Exception e) {
-            logger.error("Error creating address for user: " + address.getUser_id(), e);
-        }
-    }
+    void  delete(int id);
 }

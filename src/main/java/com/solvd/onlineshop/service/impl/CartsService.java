@@ -1,4 +1,4 @@
-package com.solvd.onlineshop.service;
+package com.solvd.onlineshop.service.impl;
 
 import com.solvd.onlineshop.bin.Carts;
 import com.solvd.onlineshop.dao.CartsRepositoryImpl;

@@ -1,4 +1,4 @@
-package com.solvd.onlineshop.service;
+package com.solvd.onlineshop.service.impl;
 
 import com.solvd.onlineshop.bin.ShippingMethods;
 import com.solvd.onlineshop.dao.mybatisimpl.ShippingMethodsRepositoryImpl;

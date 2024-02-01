@@ -4,7 +4,7 @@
 <mapper namespace="com.solvd.onlineshop.dao.persistence.OrdersRepository">
     <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
         Insert into orders(id, user_id, order_date, total_price)
-        values (#{id}, #{user_id}, #{order_date}, #{total_price})
+        values (#{id}, #{user_Id}, #{order_date}, #{total_price})
     </insert>
 
     <delete id="deleteById">

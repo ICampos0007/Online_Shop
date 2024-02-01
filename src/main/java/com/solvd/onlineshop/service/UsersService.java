@@ -1,33 +1,20 @@
 package com.solvd.onlineshop.service;
 
 import com.solvd.onlineshop.bin.Users;
-import com.solvd.onlineshop.dao.UsersRepositoryImpl;
-import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.annotations.Param;
 
-import java.sql.SQLException;
+import java.util.Optional;
 
-public class UsersService {
+public interface UsersService{
 
-    private UsersRepositoryImpl usersRepository;
+    int create(Users users);
 
-    public UsersService(SqlSessionFactory sqlSessionFactory) {
-        this.usersRepository = new UsersRepositoryImpl(sqlSessionFactory);
-    }
 
-    // Create a new user
-    public void createUser(Users user) {
-        usersRepository.createUser(user);
-    }
+    Optional<Users> getById(int id);
 
-    // Check if the username already exists
-    public boolean isUsernameExists(String username) {
-        try {
-            Users existingUser = usersRepository.getUserByUsername(username);
-            return existingUser != null;
-        } catch (SQLException e) {
-            // Log the exception or handle it based on your application's requirements
-            e.printStackTrace();
-            return false;
-        }
-    }
+
+    void updateById(@Param("users") Users users, @Param("usersId") int id);
+
+
+    void delete(int id);
 }

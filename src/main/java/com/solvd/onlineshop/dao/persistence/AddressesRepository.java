@@ -8,6 +8,8 @@ public interface AddressesRepository {
 
     void create(Addresses addresses, int usersId);
 
+    Addresses getById(int id);
+
 
     void deleteById(int id);
 

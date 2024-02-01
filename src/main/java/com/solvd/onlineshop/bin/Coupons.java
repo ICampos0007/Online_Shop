@@ -67,4 +67,5 @@ public class Coupons {
     public int getUser_Id() {
         return user_Id;
     }
+
 }

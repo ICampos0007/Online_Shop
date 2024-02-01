@@ -7,6 +7,23 @@
         values (#{address_line_1}, #{address_line_2}, #{city}, #{state}, #{postal_code}, #{user_id})
     </insert>
 
+    <select id="getById" resultType="com.solvd.onlineshop.bin.Addresses">
+        SELECT id, address_line_1, address_line_2, city, state, postal_code, user_id
+        FROM addresses
+        WHERE id = #{id}
+    </select>
+
+    <update id="update">
+        UPDATE addresses
+        SET address_line_1 = #{address_line_1},
+        address_line_2 = #{address_line_2},
+        city = #{city},
+        state = #{state},
+        postal_code = #{postal_code},
+        user_id = #{user_id}
+        WHERE id = #{id}
+    </update>
+
 
     <delete id="id">
         Delete from addresses where id = #{id}

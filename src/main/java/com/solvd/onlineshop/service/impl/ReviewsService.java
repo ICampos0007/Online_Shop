@@ -1,9 +1,8 @@
-package com.solvd.onlineshop.service;
+package com.solvd.onlineshop.service.impl;
 
 import com.solvd.onlineshop.bin.Reviews;
 import com.solvd.onlineshop.dao.ReviewsRepositoryImpl;
 
-import java.sql.SQLException;
 import java.util.Date;
 
 import org.apache.logging.log4j.LogManager;

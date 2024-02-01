@@ -1,4 +1,4 @@
-package com.solvd.onlineshop.service;
+package com.solvd.onlineshop.service.impl;
 
 import com.solvd.onlineshop.bin.Promotions;
 import com.solvd.onlineshop.dao.PromotionsRepositoryImpl;

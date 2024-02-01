@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 public class AddressesRepositoryMyBatisImpl implements AddressesRepository {
     private static final Logger logger = LogManager.getLogger(AddressesRepositoryMyBatisImpl.class);
 
+
     private final SqlSessionFactory sqlSessionFactory;
 
     public AddressesRepositoryMyBatisImpl(SqlSessionFactory sqlSessionFactory) {
@@ -23,6 +24,14 @@ public class AddressesRepositoryMyBatisImpl implements AddressesRepository {
             AddressesRepository addressesRepository = sqlSession.getMapper(AddressesRepository.class);
             addressesRepository.create(addresses, usersId);
             logger.info("Order created successfully: " + addresses.getId());
+        }
+    }
+
+    @Override
+    public Addresses getById(int id) {
+        try (SqlSession sqlSession = DaoConfig.getSessionFactory().openSession(true)) {
+            AddressesRepository addressesRepository = sqlSession.getMapper(AddressesRepository.class);
+            return addressesRepository.getById(id);
         }
     }
 
