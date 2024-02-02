@@ -17,6 +17,7 @@ public class ProductsServiceImpl implements ProductsService {
     private final ProductsRepository productsRepository;
 
     public ProductsServiceImpl(ProductsRepository productsRepository) {
+
         this.productsRepository = productsRepository;
     }
 
@@ -52,6 +53,10 @@ public class ProductsServiceImpl implements ProductsService {
         try (SqlSession sqlSession = DaoConfig.getSessionFactory().openSession(true)) {
             ProductsRepository productsRepository = sqlSession.getMapper(ProductsRepository.class);
             return productsRepository.findByName(name);
+        } catch (Exception e) {
+            logger.error("Error finding product by name: " + name, e);
+
+            return Optional.empty();
         }
     }
 
@@ -71,18 +76,4 @@ public class ProductsServiceImpl implements ProductsService {
         }
 
     }
-
-//    public void deleteProduct(int id) {
-//        try (SqlSession sqlSession = DaoConfig.getSessionFactory().openSession(true)) {
-//            ProductsRepository productsRepository = sqlSession.getMapper(ProductsRepository.class);
-//
-//            if (productsRepository.findById(id).isPresent()) {
-//                // Product exists, proceed with deletion
-//                productsRepository.deleteById(id);
-//            } else {
-//                // Product with the specified ID not found, log an error
-//                logger.error("Cannot delete product with ID {}. Product not found", id);
-//            }
-//        }
-//    }
 }

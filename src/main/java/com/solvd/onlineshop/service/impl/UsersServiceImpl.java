@@ -42,7 +42,7 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public int create(Users newUser) {
+    public void create(Users newUser) {
         ObjectMapper objectMapper = new ObjectMapper();
         File jsonData = new File("src/main/resources/Users.json");
 
@@ -65,7 +65,7 @@ public class UsersServiceImpl implements UsersService {
             // Log the exception or handle it based on your application's requirements
             e.printStackTrace();
         }
-        return newUser.getId();
+//        return newUser.getId();
     }
 
     @Override
@@ -73,6 +73,23 @@ public class UsersServiceImpl implements UsersService {
         try (SqlSession sqlSession = DaoConfig.getSessionFactory().openSession(true)) {
             UsersRepository usersRepository = sqlSession.getMapper(UsersRepository.class);
             return  usersRepository.findById(id);
+        }
+    }
+
+    @Override
+    public Optional<Users> findByUsername(String username) {
+        try (SqlSession sqlSession = DaoConfig.getSessionFactory().openSession(true)) {
+            UsersRepository usersRepository = sqlSession.getMapper(UsersRepository.class);
+            return usersRepository.findByUsername(username);
+        }
+
+    }
+
+    @Override
+    public Optional<Users> findByEmail(String email) {
+        try (SqlSession sqlSession = DaoConfig.getSessionFactory().openSession(true)) {
+            UsersRepository usersRepository = sqlSession.getMapper(UsersRepository.class);
+            return usersRepository.findByEmail(email);
         }
     }
 

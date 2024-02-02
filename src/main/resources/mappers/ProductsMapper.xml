@@ -6,22 +6,28 @@
         values (#{name}, #{description}, #{price})
     </insert>
 
-    <select id="findByName" resultMap="ProductsResultMap">
-        Select * from products where name = #{name}
+
+    <select id="findByName">
+        SELECT * FROM products WHERE name = #{name}
     </select>
 
-    <select id="findById" resultMap="ProductsResultMap">
+
+    <select id="findById">
         Select * from products where id = #{id}
     </select>
+
 
     <delete id="deleteById">
         Delete from products where id = #{id}
     </delete>
 
-    <resultMap id="ProductsResultMap" type="com.solvd.onlineshop.bin.Products" autoMapping="false">
-        <id column="id" property="id" />
-        <result column="name" property="name"/>
-        <result column="description" property="description"/>
-        <result column="price" property="price"/>
-    </resultMap>
+
+<!--    <resultMap id="ProductsResultMap" type="com.solvd.onlineshop.bin.Products" autoMapping="false">-->
+<!--        <id column="id" property="id" />-->
+<!--        <result  column="name" property="name"/>-->
+<!--        <result column="description" property="description"/>-->
+<!--        <result column="price" property="price"/>-->
+<!--    </resultMap>-->
+
 </mapper>
+

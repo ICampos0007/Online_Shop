@@ -14,6 +14,8 @@
         <mysql-jdbc-version>8.2.0</mysql-jdbc-version>
         <jaxb-version>4.0.4</jaxb-version>
         <jaxb-runtime-version>4.0.4</jaxb-runtime-version>
+        <testNG-version>7.9.0</testNG-version>
+        <suite></suite>
     </properties>
 
     <dependencies>
@@ -65,6 +67,14 @@
             <version>2.16.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.testng/testng -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testNG-version}</version>
+            <scope>test</scope>
+        </dependency>
+
 
 
     </dependencies>
@@ -80,6 +90,16 @@
                     <target>11</target>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <suiteXmlFiles>${project.build.directory}/test-classes/testng_suites/${suite}.xml</suiteXmlFiles>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

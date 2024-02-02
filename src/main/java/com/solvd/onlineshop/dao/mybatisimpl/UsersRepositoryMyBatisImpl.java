@@ -35,6 +35,22 @@ public class UsersRepositoryMyBatisImpl implements UsersRepository {
             return usersRepository.findById(id);
         }
     }
+
+    @Override
+    public Optional<Users> findByUsername(String username) {
+        try (SqlSession sqlSession = DaoConfig.getSessionFactory().openSession(true)) {
+            UsersRepository usersRepository = sqlSession.getMapper(UsersRepository.class);
+            return usersRepository.findByUsername(username);
+        }
+    }
+
+    @Override
+    public Optional<Users> findByEmail(String email) {
+        try (SqlSession sqlSession = DaoConfig.getSessionFactory().openSession(true)) {
+            UsersRepository usersRepository = sqlSession.getMapper(UsersRepository.class);
+            return usersRepository.findByEmail(email);
+        }
+    }
 //
 //    @Override
 //    public Optional<Users> findByUsername(int id) {

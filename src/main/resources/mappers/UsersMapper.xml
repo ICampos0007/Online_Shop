@@ -16,12 +16,23 @@
 <!--    </sql>-->
 
 
-    <select id="findById" resultMap="UsersResultMap">
-        SELECT
-        id AS users_id, username AS users_username
-        FROM users
-        WHERE id = #{id}
+    <select id="findById">
+<!--        SELECT-->
+<!--        id AS users_id, username AS users_username-->
+<!--        FROM users-->
+<!--        WHERE id = #{id}-->
+        Select * from users where id = #{id}
     </select>
+
+    <select id="findByUsername">
+        Select * from users where username = #{username}
+    </select>
+
+    <select id="findByEmail">
+        Select * from users where email = #{email}
+    </select>
+
+
 
 <!--    <select id="findByUsername">-->
 <!--        <include refid="usersSelect"/>-->
@@ -36,9 +47,10 @@
         Delete from users where id = #{id}
     </delete>
     
-    <resultMap id="UsersResultMap" type="com.solvd.onlineshop.bin.Users" autoMapping="false">
-        <id column="users_id" property="id" />
-        <result column="users_username" property="username"/>
-        <result column="address_address_line_1" property="address_line_1"/>
-    </resultMap>
+<!--    <resultMap id="UsersResultMap" type="com.solvd.onlineshop.bin.Users" autoMapping="false">-->
+<!--        <id column="users_id" property="id" />-->
+<!--        <result column="users_username" property="username"/>-->
+<!--        <result column="address_address_line_1" property="address_line_1"/>-->
+<!--    </resultMap>-->
+
 </mapper>

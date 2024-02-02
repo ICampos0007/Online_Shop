@@ -11,6 +11,8 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Optional;
+
 public class OrdersServiceImpl implements OrderService {
 
     private static final Logger logger = LogManager.getLogger(OrdersServiceImpl.class);
@@ -36,6 +38,14 @@ public class OrdersServiceImpl implements OrderService {
         try (SqlSession sqlSession = DaoConfig.getSessionFactory().openSession(true)) {
             OrdersRepository ordersRepository = sqlSession.getMapper(OrdersRepository.class);
             ordersRepository.create(orders);
+        }
+    }
+
+    @Override
+    public Optional<Orders> findById(int id) {
+        try (SqlSession sqlSession = DaoConfig.getSessionFactory().openSession(true)) {
+            OrdersRepository ordersRepository = sqlSession.getMapper(OrdersRepository.class);
+            return ordersRepository.findById(id);
         }
     }
 

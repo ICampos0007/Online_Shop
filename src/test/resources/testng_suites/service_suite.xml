@@ -1,0 +1,63 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="product duplicate suite" verbose="1" parallel="tests" thread-count="10">
+    <test name="Product name test">
+        <classes>
+            <class name="com.solvd.onlineshop.ProductNameTest"/>
+        </classes>
+    </test>
+
+    <test name="Product ID test">
+        <classes>
+            <class name="com.solvd.onlineshop.ProductIdTest"/>
+        </classes>
+    </test>
+
+    <test name="Addresses ID test">
+        <classes>
+            <class name="com.solvd.onlineshop.AddressesIdTest"/>
+        </classes>
+    </test>
+
+    <test name="Payment method ID test">
+        <classes>
+            <class name="com.solvd.onlineshop.PaymentMethodIdTest"/>
+        </classes>
+    </test>
+
+    <test name="User ID test">
+        <classes>
+            <class name="com.solvd.onlineshop.UsersIdTest"/>
+        </classes>
+    </test>
+
+    <test name="Valid username test">
+        <classes>
+            <class name="com.solvd.onlineshop.ValidUsernameTest"/>
+        </classes>
+    </test>
+
+    <test name="Valid order ID test">
+        <classes>
+            <class name="com.solvd.onlineshop.OrderIdTest"/>
+        </classes>
+    </test>
+
+    <test name="Valid User email Test">
+        <classes>
+            <class name="com.solvd.onlineshop.ValidUserEmailTest"/>
+        </classes>
+    </test>
+
+    <test name="Create new product test">
+        <classes>
+            <class name="com.solvd.onlineshop.CreateProductTest"/>
+        </classes>
+    </test>
+
+    <test name="Create a new user test">
+        <classes>
+            <class name="com.solvd.onlineshop.CreateUserTest"/>
+        </classes>
+    </test>
+</suite>

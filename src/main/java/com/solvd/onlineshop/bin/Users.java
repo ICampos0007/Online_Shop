@@ -22,6 +22,10 @@ public class Users {
         this.email = email;
     }
 
+//    public Users() {
+//
+//    }
+
     public void setId(int id) {
         this.id = id;
     }

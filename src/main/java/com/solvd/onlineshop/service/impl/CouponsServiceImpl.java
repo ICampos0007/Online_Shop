@@ -61,8 +61,6 @@ public class CouponsServiceImpl implements CouponsService {
 
              coupons = (Coupons) jaxbUnmarshaller.unmarshal(file);
 
-            // Rest of your code...
-
         } catch (JAXBException | SAXException e) {
             throw new RuntimeException(e);
         }

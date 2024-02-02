@@ -7,10 +7,14 @@ import java.util.Optional;
 
 public interface UsersService{
 
-    int create(Users users);
+    void create(Users users);
 
 
     Optional<Users> getById(int id);
+
+    Optional<Users> findByUsername(String username);
+
+    Optional<Users> findByEmail(String email);
 
 
     void updateById(@Param("users") Users users, @Param("usersId") int id);

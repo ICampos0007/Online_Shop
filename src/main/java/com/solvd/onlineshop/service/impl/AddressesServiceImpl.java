@@ -9,6 +9,8 @@ import com.solvd.onlineshop.service.AddressesService;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import java.sql.SQLException;
+import java.util.Optional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -63,10 +65,10 @@ public class AddressesServiceImpl implements AddressesService {
     }
 
     @Override
-    public Addresses getById(int id) {
+    public Optional<Addresses> getById(int id) {
         try (SqlSession sqlSession = DaoConfig.getSessionFactory().openSession(true)) {
             AddressesRepository addressesRepository = sqlSession.getMapper(AddressesRepository.class);
-            return addressesRepository.getById(id);
+            return Optional.ofNullable(addressesRepository.getById(id));
         }
 
     }

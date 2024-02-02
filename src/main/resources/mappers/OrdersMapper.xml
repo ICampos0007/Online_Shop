@@ -7,6 +7,10 @@
         values (#{id}, #{user_Id}, #{order_date}, #{total_price})
     </insert>
 
+    <select id="findById">
+        SELECT * from orders where id  = #{id}
+    </select>
+
     <delete id="deleteById">
         Delete from orders where id = #{id}
     </delete>

@@ -10,6 +10,10 @@ public interface UsersRepository {
 
     Optional<Users> findById(int id);
 
+    Optional<Users> findByUsername(String username);
+
+    Optional<Users> findByEmail(String email);
+
 
     void updateById(@Param("users") Users users, @Param("usersId") int id);
 

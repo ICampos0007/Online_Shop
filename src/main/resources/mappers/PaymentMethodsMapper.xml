@@ -7,7 +7,7 @@
         values (#{user_Id}, #{card_Number}, #{expiration_Date}, #{cvv})
     </insert>
 
-    <select id="findById" resultMap="PaymentMethodsResultMap">
+    <select id="findById">
         SELECT * FROM paymentmethods WHERE id = #{id}
     </select>
 
@@ -15,11 +15,5 @@
         Delete from paymentmethods were id = #{id}
     </delete>
 
-    <resultMap id="PaymentMethodsResultMap" type="com.solvd.onlineshop.bin.PaymentMethods" autoMapping="false">
-        <id column="id" property="id" />
-        <result column="user_id" property="user_id"/>
-        <result column="card_number" property="card_number"/>
-        <result column="expiration_date" property="expiration_date"/>
-        <result column="cvv" property="cvv"/>
-    </resultMap>
+
 </mapper>

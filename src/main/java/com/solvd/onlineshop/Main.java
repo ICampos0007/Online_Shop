@@ -243,6 +243,7 @@ public class Main {
             ProductsServiceImpl productsService = new ProductsServiceImpl(productsRepository);
             productsService.create(newServiceProduct);
 
+
             // DOM for ShippingMethod.xml file
 //            File file = new File("src/main/resources/ShippingMethods.xml");
 //            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
